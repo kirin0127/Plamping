@@ -13,9 +13,20 @@ import javax.servlet.http.HttpServletResponse;
 public class PromotionServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		req.setCharacterEncoding("UTF-8");
 		PrintWriter out = res.getWriter();
-		out.println("Servlet change from mac.");
-		out.println("Servlet change from windows.");
+		String action = req.getParameter("action");
+		
+		if("ajax_getPrice".equals(action)) {
+			String vd_no = req.getParameter("vd_no");
+			String item_type = req.getParameter("item_type");
+			String item_no = req.getParameter("item_no");
+			System.out.println("vd_no : " + vd_no);
+			System.out.println("item_type : " + item_type);
+			System.out.println("item_no : " + item_no);
+			out.print(6666);
+		}
+
 	}
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
