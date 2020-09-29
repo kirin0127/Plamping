@@ -15,6 +15,7 @@ public class PromotionServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		PrintWriter out = res.getWriter();
 		out.println("Servlet change from mac.");
+		out.println("Servlet change from windows.");
 	}
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
