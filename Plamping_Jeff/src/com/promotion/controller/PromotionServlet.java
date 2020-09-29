@@ -16,8 +16,10 @@ public class PromotionServlet extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		PrintWriter out = res.getWriter();
 		String action = req.getParameter("action");
-		
+		System.out.println(action);
+		out.print(6666);
 		if("ajax_getPrice".equals(action)) {
+			System.out.println("get ajax req from promoCreate.html");
 			String vd_no = req.getParameter("vd_no");
 			String item_type = req.getParameter("item_type");
 			String item_no = req.getParameter("item_no");

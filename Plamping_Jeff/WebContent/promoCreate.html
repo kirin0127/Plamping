@@ -173,7 +173,7 @@
     // show price edit field when select item.
     var select = document.querySelectorAll("select");
     select.forEach(function(selecti){
-        selecti.onchange = itemShowPrice(0,0,0);
+        selecti.onchange = itemShowPrice("0","0","0");
     });
     // show new item when click add btn.
     var addBtn = document.querySelectorAll("button:last-child");
@@ -187,7 +187,7 @@
             // register new create item select onchange listener.
             for(let itemChild of item.children){
                 if(itemChild.tagName == "SELECT"){
-                    itemChild.onchange = itemShowPrice(0,0,0);
+                    itemChild.onchange = itemShowPrice("0","0","0");
                 }
                 if(itemChild.getAttribute("class") == "deleteIcon"){
                     itemChild.onclick = function(){
@@ -204,6 +204,7 @@
                 this.nextElementSibling.style.display = "none";
             }else{
                 var item_price = ajaxGetItemPrice(vd_no, item_type, item_no);
+                console.log(item_price);
                 this.nextElementSibling.firstElementChild.value = item_price;
                 this.nextElementSibling.style.display = "inline";
             }
@@ -217,16 +218,17 @@
         formData.append("item_type", item_type);
         formData.append("item_no", item_no);
         var xhr = new XMLHttpRequest();
-        var url = "PromotionServlet";
-        xhr.open("post", url, true);
+		var url = "PromotionServlet";
+        xhr.open("POST", url);
         xhr.send(formData);
-        var resData = "";
+        var resData = null;
         xhr.onreadystatechange = function(){
             if(this.readyState == 4){
                 console.log("request complete.");
                 if(this.status == 200){
                     console.log("request network OK.");
-                    resData = this.responseText;
+                    console.log(xhr.responseText);
+                    resData = xhr.responseText;
                 }else{
                     console.log("request network Failed. " + this.status);
                 }
