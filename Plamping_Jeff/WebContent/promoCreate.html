@@ -170,10 +170,17 @@
 </div>
 </body>
 <script type="text/javascript">
+	console.log(window.location.href);
+	var currentURL = new URL(window.location.href);
+	var vd_no = currentURL.searchParams.get("vd_no");
+	console.log(vd_no);
     // show price edit field when select item.
     var select = document.querySelectorAll("select");
     select.forEach(function(selecti){
-        selecti.onchange = itemShowPrice("0","0","0");
+        selecti.onchange = function(){
+        	itemShowPrice(this, vd_no, this.name, this.value);
+        }
+        
     });
     // show new item when click add btn.
     var addBtn = document.querySelectorAll("button:last-child");
@@ -187,7 +194,9 @@
             // register new create item select onchange listener.
             for(let itemChild of item.children){
                 if(itemChild.tagName == "SELECT"){
-                    itemChild.onchange = itemShowPrice("0","0","0");
+                    itemChild.onchange = function(){
+                    	itemShowPrice(this, vd_no, this.name, this.value);
+                    }	
                 }
                 if(itemChild.getAttribute("class") == "deleteIcon"){
                     itemChild.onclick = function(){
@@ -198,20 +207,16 @@
         }
     });
     // onchange callback function of select element.
-    function itemShowPrice(vd_no, item_type, item_no){
-        return function(vd_no, item_type, item_no){
-            if(this.value == ""){
-                this.nextElementSibling.style.display = "none";
-            }else{
-                var item_price = ajaxGetItemPrice(vd_no, item_type, item_no);
-                console.log(item_price);
-                this.nextElementSibling.firstElementChild.value = item_price;
-                this.nextElementSibling.style.display = "inline";
-            }
+    function itemShowPrice(selectDOM, vd_no, item_type, item_no){
+        if(selectDOM.value == ""){
+        	selectDOM.nextElementSibling.style.display = "none";
+        }else{
+            ajaxGetItemPrice(selectDOM, vd_no, item_type, item_no);
+            selectDOM.nextElementSibling.style.display = "inline";
         }
     }
     // Ajax update selected item original price.
-    function ajaxGetItemPrice(vd_no, item_type, item_no){
+    function ajaxGetItemPrice(selectDOM, vd_no, item_type, item_no){
         var formData = new FormData();
         formData.append("action", "ajax_getPrice");
         formData.append("vd_no", vd_no);
@@ -221,20 +226,18 @@
 		var url = "PromotionServlet";
         xhr.open("POST", url);
         xhr.send(formData);
-        var resData = null;
         xhr.onreadystatechange = function(){
             if(this.readyState == 4){
                 console.log("request complete.");
                 if(this.status == 200){
                     console.log("request network OK.");
-                    console.log(xhr.responseText);
-                    resData = xhr.responseText;
+                    selectDOM.nextElementSibling.firstElementChild.value = xhr.responseText;
+                    return xhr.responseText;
                 }else{
                     console.log("request network Failed. " + this.status);
                 }
             }
         }
-        return resData;
     }
     
 </script>
