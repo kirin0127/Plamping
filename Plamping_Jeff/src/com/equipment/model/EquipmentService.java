@@ -7,7 +7,7 @@ public class EquipmentService {
 	private EquipmentDAO_interface dao;
 	
 	public EquipmentService() {
-		dao = new EquipmentDAO();
+		dao = new EquipmentJDBCDAO();
 	}
 	
 	public EquipmentVO addEquipment(String eqptvdno, String eqptname, Integer eqptqty, Integer eqptprice, Integer eqptstat, byte[] eqptpic) {

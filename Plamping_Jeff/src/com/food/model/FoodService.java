@@ -7,7 +7,7 @@ public class FoodService {
 	private FoodDAO_interface dao;
 
 	public FoodService() {
-		dao = new FoodDAO();
+		dao = new FoodJDBCDAO();
 	}
 	
 	public FoodVO addFood(String foodvdno, String foodname, Integer foodprice, String foodintro, Integer foodstat, byte[] foodpic) {

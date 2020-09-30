@@ -7,7 +7,7 @@ public class CampService {
 	private CampDAO_interface dao;
 	
 	public CampService() {
-		dao = new CampDAO();
+		dao = new CampJDBCDAO();
 	}
 	
 	public CampVO addCamp(String campvdno, String campname, String campctno, Integer campqty, Integer campprice, Integer campstat, byte[] camppic) {

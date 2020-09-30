@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <title>promoSelect</title>
+    <style type="text/css">
+        #searchBar{
+            display: inline;
+            position: relative;
+            left: 265px;
+        }
+        #searchIcon{
+            transform: translate(2px, 6px);
+        }
+        div.btnBar{
+            margin-bottom: 30px;
+        }
+        table, th, td{
+            border: 1px solid black;
+        }
+        table{
+            width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>促銷專案管理</h1>
+        <div class="btnBar">
+            <a href="promoCreate_JSP.jsp?vd_no="><button>新增促銷專案</button></a>
+            <form id="searchBar" method="post" action="/PromotionServlet">
+                <svg id="searchIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <path fill-rule="evenodd" d="M14.53 15.59a8.25 8.25 0 111.06-1.06l5.69 5.69a.75.75 0 11-1.06 1.06l-5.69-5.69zM2.5 9.25a6.75 6.75 0 1111.74 4.547.746.746 0 00-.443.442A6.75 6.75 0 012.5 9.25z"></path>
+                </svg>
+                <input type="hidden" name="action" value="search">
+                <input type="text" name="keyWord" placeholder="輸入關鍵字...">
+                <input type="submit" value="查詢">
+            </form>
+        </div>
+        <div class="promoRows">
+            <table>
+                <thead>
+                    <th>#</th>   
+                    <th>促銷專案名稱</th>
+                    <th>促銷開始日期</th>
+                    <th>促銷結束日期</th>
+                    <th>狀態</th>
+                </thead>
+                <tbody>
+                    <tr style="background-color: #D0D3D4">
+                        <td>模板1</td>
+                        <td><a href="/PromotionServlet?action=detail&pro_no=P000000001">2020中秋促銷專案</a></td>
+                        <td>2020/09/28</td>
+                        <td>2020/10/10</td>
+                        <td>啟用</td>
+                    </tr>
+                    <tr style="background-color: #D0D3D4">
+                        <td>模板2</td>
+                        <td><a href="/PromotionServlet?action=detail&pro_no=P000000002">2021中秋促銷專案</a></td>
+                        <td>2021/09/28</td>
+                        <td>2021/10/10</td>
+                        <td>未啟用</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    var vd_no = window.prompt("Please type in your vendor no. : ");
+    var createBtn = document.querySelector("div.btnBar").firstElementChild;
+    createBtn.href = createBtn.href + vd_no;
+</script>
+</html>

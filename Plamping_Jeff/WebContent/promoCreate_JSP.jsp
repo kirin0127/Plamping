@@ -1,4 +1,15 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="java.util.*"%>
+<%@ page import="com.camp.model.*"%>
+<%@ page import="com.equipment.model.*"%>
+<%@ page import="com.food.model.*"%>
 <!DOCTYPE html>
+<jsp:useBean id="campSvc" scope="page" class="com.camp.model.CampService"/>
+<jsp:useBean id="eqptSvc" scope="page" class="com.equipment.model.EquipmentService"/>
+<jsp:useBean id="foodSvc" scope="page" class="com.food.model.FoodService"/>
+<% String vd_no = request.getParameter("vd_no"); %>
 <html>
 <head>
     <title>promoCreate</title>
@@ -67,6 +78,7 @@
     </style>
 </head>
 <body>
+	<%=vd_no %>
     <div class="container">
         <h1>新增促銷專案</h1>
         <form method="post" action="PromotionServlet">
@@ -76,7 +88,7 @@
                 促銷專案名稱：<input type="text" name="pro_name">
                 促銷開始日期：<input type="date" name="pro_start">
                 促銷結束日期：<input type="date" name="pro_end">
-                <input type="hidden" name="pro_vdno" value="V000000001">
+                <input type="hidden" name="pro_vdno" value="">
             </div>
             <div class="camp">
                 <span>促銷營位</span>
@@ -96,9 +108,11 @@
                     </svg>
                 營位名稱：<select name="pc_campno">
                     <option value="" selected>請選擇營位...</option>
-                    <option value="C000000001">小木屋</option>
-                    <option value="C000000002">中木屋</option>
-                    <option value="C000000003">大木屋</option>
+                    <c:forEach var="campVO" items="${campSvc.all}">
+                    	<c:if test="${campVO.campvdno == request.getParameter(\"vd_no\")}">
+                    		<option value="${campVO.campno}">${campVO.campname}</option>
+                    	</c:if>
+                    </c:forEach>
                 </select>
                 <div class="editPrice">
                     原價：<input type="number" name="camp_price" value="1000" disabled>
@@ -170,15 +184,15 @@
 </div>
 </body>
 <script type="text/javascript">
-    // get vd_no from promoSelect page.
-    var currentURL = new URL(window.location.href);
-    var vd_no = currentURL.searchParams.get("vd_no");
-    document.querySelector("div.info input[name='pro_vdno']").value = vd_no;
+	// get vd_no from promoSelect page.
+	var currentURL = new URL(window.location.href);
+	var vd_no = currentURL.searchParams.get("vd_no");
+	document.querySelector("div.info input[name='pro_vdno']").value = vd_no;
     // show price edit field when select item.
     var select = document.querySelectorAll("select");
     select.forEach(function(selecti){
         selecti.onchange = function(){
-            itemShowPrice(this, vd_no, this.name, this.value);
+        	itemShowPrice(this, vd_no, this.name, this.value);
         }
         
     });
@@ -195,8 +209,8 @@
             for(let itemChild of item.children){
                 if(itemChild.tagName == "SELECT"){
                     itemChild.onchange = function(){
-                        itemShowPrice(this, vd_no, this.name, this.value);
-                    }   
+                    	itemShowPrice(this, vd_no, this.name, this.value);
+                    }	
                 }
                 if(itemChild.getAttribute("class") == "deleteIcon"){
                     itemChild.onclick = function(){
@@ -209,7 +223,7 @@
     // onchange callback function of select element.
     function itemShowPrice(selectDOM, vd_no, item_type, item_no){
         if(selectDOM.value == ""){
-            selectDOM.nextElementSibling.style.display = "none";
+        	selectDOM.nextElementSibling.style.display = "none";
         }else{
             ajaxGetItemPrice(selectDOM, vd_no, item_type, item_no);
             selectDOM.nextElementSibling.style.display = "inline";
@@ -223,7 +237,7 @@
         formData.append("item_type", item_type);
         formData.append("item_no", item_no);
         var xhr = new XMLHttpRequest();
-        var url = "PromotionServlet";
+		var url = "PromotionServlet";
         xhr.open("POST", url);
         xhr.send(formData);
         xhr.onreadystatechange = function(){
