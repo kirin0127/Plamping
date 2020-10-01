@@ -109,7 +109,7 @@
                 營位名稱：<select name="pc_campno">
                     <option value="" selected>請選擇營位...</option>
                     <c:forEach var="campVO" items="${campSvc.all}">
-                    	<c:if test="${campVO.campvdno == request.getParameter(\"vd_no\")}">
+                    	<c:if test="${campVO.campvdno == param.vd_no}">
                     		<option value="${campVO.campno}">${campVO.campname}</option>
                     	</c:if>
                     </c:forEach>
@@ -139,9 +139,11 @@
                 </svg>
                 裝備名稱：<select name="pc_eqptno">
                     <option value="" selected>請選擇裝備...</option>
-                    <option value="E000000001">�b�O</option>
-                    <option value="E000000002">�o�O</option>
-                    <option value="E000000003">�B��</option>
+                    <c:forEach var="eqptVO" items="${eqptSvc.all}">
+                    	<c:if test="${eqptVO.eqptvdno == param.vd_no}">
+                    		<option value="${eqptVO.eqptno}">${eqptVO.eqptname}</option>
+                    	</c:if>
+                    </c:forEach>
                 </select>
                 <div class="editPrice">
                     原價：<input type="number" name="eqpt_price" value="1000" disabled>
@@ -168,9 +170,11 @@
                 </svg>
                 食材名稱：<select name="pc_foodno">
                     <option value="" selected>請選擇食材...</option>
-                    <option value="F000000001">����</option>
-                    <option value="F000000002">�ަ�</option>
-                    <option value="F000000003">����</option>
+                    <c:forEach var="foodVO" items="${foodSvc.all}">
+                    	<c:if test="${foodVO.foodvdno == param.vd_no}">
+                    		<option value="${foodVO.foodno}">${foodVO.foodname}</option>
+                    	</c:if>
+                    </c:forEach>
                 </select>
                 <div class="editPrice">
                     原價：<input type="number" name="food_price" value="1000" disabled>
