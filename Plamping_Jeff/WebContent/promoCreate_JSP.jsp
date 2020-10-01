@@ -115,7 +115,7 @@
                     </c:forEach>
                 </select>
                 <div class="editPrice">
-                    原價：<input type="number" name="camp_price" value="1000" disabled>
+                    原價：<input type="number" name="camp_price" value="" disabled>
                     促銷價：<input type="number" name="pc_price">
                 </div>
             </div>
@@ -146,7 +146,7 @@
                     </c:forEach>
                 </select>
                 <div class="editPrice">
-                    原價：<input type="number" name="eqpt_price" value="1000" disabled>
+                    原價：<input type="number" name="eqpt_price" value="" disabled>
                     促銷價：<input type="number" name="pe_price">
                 </div>
             </div>
@@ -177,7 +177,7 @@
                     </c:forEach>
                 </select>
                 <div class="editPrice">
-                    原價：<input type="number" name="food_price" value="1000" disabled>
+                    原價：<input type="number" name="food_price" value="" disabled>
                     促銷價：<input type="number" name="pf_price">
                 </div>
             </div>
@@ -250,7 +250,7 @@
                 if(this.status == 200){
                     console.log("request network OK.");
                     selectDOM.nextElementSibling.firstElementChild.value = xhr.responseText;
-                    return xhr.responseText;
+                    console.log(xhr.responseText);
                 }else{
                     console.log("request network Failed. " + this.status);
                 }

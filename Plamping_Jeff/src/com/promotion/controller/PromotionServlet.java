@@ -23,6 +23,7 @@ public class PromotionServlet extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		PrintWriter out = res.getWriter();
 		String action = req.getParameter("action");
+
 		// promoCreate ajax call to update origin price.
 		if("ajax_getPrice".equals(action)) {
 			// Create camp, eqpt, food service instance
@@ -36,8 +37,8 @@ public class PromotionServlet extends HttpServlet {
 			if("pc_campno".equals(item_type)) {
 				List<CampVO> campList = campSvc.getAll();
 				for(CampVO camp : campList) {
-					if(vd_no.equals(camp.getCampno())) {
-						if(item_no.equals(camp.getCampvdno())) {
+					if(vd_no.equals(camp.getCampvdno())) {
+						if(item_no.equals(camp.getCampno())) {
 							out.print(camp.getCampprice());
 							System.out.println(vd_no);
 							System.out.println(item_type);
@@ -49,8 +50,8 @@ public class PromotionServlet extends HttpServlet {
 			}else if("pc_eqptno".equals(item_type)) {
 				List<EquipmentVO> eqptList = eqptSvc.getAll();
 				for(EquipmentVO eqpt : eqptList) {
-					if(vd_no.equals(eqpt.getEqptno())) {
-						if(item_no.equals(eqpt.getEqptvdno())) {
+					if(vd_no.equals(eqpt.getEqptvdno())) {
+						if(item_no.equals(eqpt.getEqptno())) {
 							out.print(eqpt.getEqptprice());
 							System.out.println(vd_no);
 							System.out.println(item_type);
@@ -62,8 +63,8 @@ public class PromotionServlet extends HttpServlet {
 			}else if("pc_foodno".equals(item_type)) {
 				List<FoodVO> foodList = foodSvc.getAll();
 				for(FoodVO food : foodList) {
-					if(vd_no.equals(food.getFoodno())) {
-						if(item_no.equals(food.getFoodvdno())) {
+					if(vd_no.equals(food.getFoodvdno())) {
+						if(item_no.equals(food.getFoodno())) {
 							out.print(food.getFoodprice());
 							System.out.println(vd_no);
 							System.out.println(item_type);
