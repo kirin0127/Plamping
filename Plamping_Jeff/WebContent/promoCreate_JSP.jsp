@@ -78,7 +78,6 @@
     </style>
 </head>
 <body>
-	<%=vd_no %>
     <div class="container">
         <h1>新增促銷專案</h1>
         <form method="post" action="PromotionServlet">
@@ -137,7 +136,7 @@
                     c5.068,5.072,11.824,7.856,19.024,7.856h0.008c7.204,0,13.96-2.784,19.028-7.856l16.12-16.116
                     c5.06-5.064,7.852-11.824,7.852-19.028c0-7.204-2.792-13.96-7.852-19.028L300.188,246z"/>
                 </svg>
-                裝備名稱：<select name="pc_eqptno">
+                裝備名稱：<select name="pe_eqptno">
                     <option value="" selected>請選擇裝備...</option>
                     <c:forEach var="eqptVO" items="${eqptSvc.all}">
                     	<c:if test="${eqptVO.eqptvdno == param.vd_no}">
@@ -168,7 +167,7 @@
                     c5.068,5.072,11.824,7.856,19.024,7.856h0.008c7.204,0,13.96-2.784,19.028-7.856l16.12-16.116
                     c5.06-5.064,7.852-11.824,7.852-19.028c0-7.204-2.792-13.96-7.852-19.028L300.188,246z"/>
                 </svg>
-                食材名稱：<select name="pc_foodno">
+                食材名稱：<select name="pf_foodno">
                     <option value="" selected>請選擇食材...</option>
                     <c:forEach var="foodVO" items="${foodSvc.all}">
                     	<c:if test="${foodVO.foodvdno == param.vd_no}">
@@ -205,6 +204,7 @@
     addBtn.forEach(function(addBtni){
         addBtni.onclick = function(){
             var item = this.previousElementSibling.cloneNode(true);
+            item.lastElementChild.firstElementChild.value = "";
             item.lastElementChild.style.display = "none"; //price field
             item.firstElementChild.style.display = "none"; // blankIcon svg
             item.firstElementChild.nextElementSibling.style.display = "inline"; // deleteIcon svg

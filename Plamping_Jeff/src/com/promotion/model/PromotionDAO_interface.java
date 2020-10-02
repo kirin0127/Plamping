@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface PromotionDAO_interface {
 	
-	public void insert(PromotionVO proVO);
+	public String insert(PromotionVO proVO);
 	
 	public void update(PromotionVO proVO);
 	

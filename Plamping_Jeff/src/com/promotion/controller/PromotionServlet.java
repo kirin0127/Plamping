@@ -2,6 +2,7 @@ package com.promotion.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -14,6 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.camp.model.*;
 import com.equipment.model.*;
 import com.food.model.*;
+import com.promotion.model.*;
+import com.promocamp.model.*;
+import com.promoeqpt.model.*;
+import com.promofood.model.*;
+
 
 @WebServlet("/PromotionServlet")
 @MultipartConfig()
@@ -40,10 +46,6 @@ public class PromotionServlet extends HttpServlet {
 					if(vd_no.equals(camp.getCampvdno())) {
 						if(item_no.equals(camp.getCampno())) {
 							out.print(camp.getCampprice());
-							System.out.println(vd_no);
-							System.out.println(item_type);
-							System.out.println(item_no);
-							System.out.println(camp.getCampprice());
 						}
 					}
 				}
@@ -53,10 +55,6 @@ public class PromotionServlet extends HttpServlet {
 					if(vd_no.equals(eqpt.getEqptvdno())) {
 						if(item_no.equals(eqpt.getEqptno())) {
 							out.print(eqpt.getEqptprice());
-							System.out.println(vd_no);
-							System.out.println(item_type);
-							System.out.println(item_no);
-							System.out.println(eqpt.getEqptprice());
 						}
 					}
 				}
@@ -66,16 +64,60 @@ public class PromotionServlet extends HttpServlet {
 					if(vd_no.equals(food.getFoodvdno())) {
 						if(item_no.equals(food.getFoodno())) {
 							out.print(food.getFoodprice());
-							System.out.println(vd_no);
-							System.out.println(item_type);
-							System.out.println(item_no);
-							System.out.println(food.getFoodprice());
 						}
 					}
 				}
 			}
 		}
 		// Other action
+		if("create".equals(action)) {
+			// Get parameters from promoCreate.jsp post form data
+			String pro_name = req.getParameter("pro_name");
+			String pro_start = req.getParameter("pro_start");
+			String pro_end = req.getParameter("pro_end");
+			String[] pc_campnoList = req.getParameterValues("pc_campno");
+			String[] pc_priceList = req.getParameterValues("pc_price");
+			String[] pe_eqptnoList = req.getParameterValues("pe_eqptno");
+			String[] pe_priceList = req.getParameterValues("pe_price");
+			String[] pf_foodnoList = req.getParameterValues("pf_foodno");
+			String[] pf_priceList = req.getParameterValues("pf_price");
+			// Insert promotion record & get inserted record's pro_no.
+			PromotionService proSvc = new PromotionService();
+			PromotionVO proVO = new PromotionVO();
+			proVO.setPro_name(pro_name);
+			proVO.setPro_start(Date.valueOf(pro_start));
+			proVO.setPro_end(Date.valueOf(pro_end));
+			String pro_no = proSvc.insert(proVO);
+			System.out.println("Promotion : " + pro_no + " inserted.");
+			// Insert promo_camp
+			PromoCampService pcSvc = new PromoCampService();
+			for(int i = 0; i < pc_campnoList.length; i++) {
+				PromoCampVO pcVO = new PromoCampVO();
+				pcVO.setPc_prono(pro_no);
+				pcVO.setPc_campno(pc_campnoList[i]);
+				pcVO.setPc_price(Integer.parseInt(pc_priceList[i]));
+				System.out.println("PromoCamp : " + pc_campnoList[i] + " inserted.");
+			}
+			// Insert promo_eqpt
+			PromoEqptService peSvc = new PromoEqptService();
+			for(int i = 0; i < pe_eqptnoList.length; i++) {
+				PromoEqptVO peVO = new PromoEqptVO();
+				peVO.setPe_prono(pro_no);
+				peVO.setPe_eqptno(pe_eqptnoList[i]);
+				peVO.setPe_price(Integer.parseInt(pe_priceList[i]));
+				System.out.println("PromoEqpt : " + pe_eqptnoList[i] + " inserted.");
+			}
+			// Insert promo_food
+			PromoFoodService pfSvc = new PromoFoodService();
+			for(int i = 0; i < pf_foodnoList.length; i++) {
+				PromoFoodVO pfVO = new PromoFoodVO();
+				pfVO.setPf_prono(pro_no);
+				pfVO.setPf_foodno(pf_foodnoList[i]);
+				pfVO.setPf_price(Integer.parseInt(pf_priceList[i]));
+				System.out.println("PromoFood : " + pf_foodnoList[i] + " inserted.");
+			}
+		}
+		
 
 	}
 

@@ -9,8 +9,9 @@ public class PromotionService {
 		proDAO = new PromotionDAO();
 	}
 
-	public void insert(PromotionVO proVO) {
-		proDAO.insert(proVO);
+	public String insert(PromotionVO proVO) {
+		String pro_no = proDAO.insert(proVO);
+		return pro_no;
 	}
 
 	public void update(PromotionVO proVO) {

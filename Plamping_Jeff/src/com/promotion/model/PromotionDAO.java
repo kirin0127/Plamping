@@ -24,7 +24,8 @@ public class PromotionDAO implements PromotionDAO_interface {
 	private static final String SQL_DELETE = "DELETE FROM PROMOTION WHERE PRO_NO=?";
 
 	@Override
-	public void insert(PromotionVO proVO) {
+	public String insert(PromotionVO proVO) {
+		String pro_no = null;
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			con = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -38,6 +39,13 @@ public class PromotionDAO implements PromotionDAO_interface {
 			pstmt.setInt(5, proVO.getPro_stat());
 			con.setAutoCommit(false);
 			pstmt.executeUpdate();
+			// get generated seq pro_no
+			rs = pstmt.getGeneratedKeys();
+			if(rs.next()) {
+				pro_no = rs.getString(1);
+			}else {
+				System.out.println("There's no generated pro_no.");
+			}
 			con.commit();
 			System.out.printf("Promotion: \"%s\" Insert Successfully.%n", proVO.getPro_name());
 		} catch (ClassNotFoundException e) {
@@ -66,6 +74,7 @@ public class PromotionDAO implements PromotionDAO_interface {
 				}
 			}
 		}
+		return pro_no;
 	}
 
 	@Override
