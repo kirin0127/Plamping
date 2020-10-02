@@ -87,7 +87,7 @@
                 促銷專案名稱：<input type="text" name="pro_name">
                 促銷開始日期：<input type="date" name="pro_start">
                 促銷結束日期：<input type="date" name="pro_end">
-                <input type="hidden" name="pro_vdno" value="">
+                <input type="hidden" name="vd_no" value="">
             </div>
             <div class="camp">
                 <span>促銷營位</span>
@@ -190,7 +190,7 @@
 	// get vd_no from promoSelect page.
 	var currentURL = new URL(window.location.href);
 	var vd_no = currentURL.searchParams.get("vd_no");
-	document.querySelector("div.info input[name='pro_vdno']").value = vd_no;
+	document.querySelector("div.info input[name='vd_no']").value = vd_no;
     // show price edit field when select item.
     var select = document.querySelectorAll("select");
     select.forEach(function(selecti){
@@ -204,7 +204,8 @@
     addBtn.forEach(function(addBtni){
         addBtni.onclick = function(){
             var item = this.previousElementSibling.cloneNode(true);
-            item.lastElementChild.firstElementChild.value = "";
+            item.lastElementChild.firstElementChild.value = ""; //origin price field
+            item.lastElementChild.lastElementChild.value = ""; //promotion price field
             item.lastElementChild.style.display = "none"; //price field
             item.firstElementChild.style.display = "none"; // blankIcon svg
             item.firstElementChild.nextElementSibling.style.display = "inline"; // deleteIcon svg
@@ -250,6 +251,9 @@
                 if(this.status == 200){
                     console.log("request network OK.");
                     selectDOM.nextElementSibling.firstElementChild.value = xhr.responseText;
+                    console.log(vd_no);
+                    console.log(item_type);
+                    console.log(item_no);
                     console.log(xhr.responseText);
                 }else{
                     console.log("request network Failed. " + this.status);

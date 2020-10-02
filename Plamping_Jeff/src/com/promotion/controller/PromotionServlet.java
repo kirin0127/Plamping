@@ -29,7 +29,9 @@ public class PromotionServlet extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		PrintWriter out = res.getWriter();
 		String action = req.getParameter("action");
-
+		String vd_no = req.getParameter("vd_no");
+		System.out.println(action);
+		System.out.println(vd_no);
 		// promoCreate ajax call to update origin price.
 		if("ajax_getPrice".equals(action)) {
 			// Create camp, eqpt, food service instance
@@ -37,7 +39,6 @@ public class PromotionServlet extends HttpServlet {
 			EquipmentService eqptSvc = new EquipmentService();
 			FoodService foodSvc = new FoodService();
 			// Get parameters from promoCreate.jsp ajax call
-			String vd_no = req.getParameter("vd_no");
 			String item_type = req.getParameter("item_type");
 			String item_no = req.getParameter("item_no");
 			if("pc_campno".equals(item_type)) {
@@ -49,7 +50,7 @@ public class PromotionServlet extends HttpServlet {
 						}
 					}
 				}
-			}else if("pc_eqptno".equals(item_type)) {
+			}else if("pe_eqptno".equals(item_type)) {
 				List<EquipmentVO> eqptList = eqptSvc.getAll();
 				for(EquipmentVO eqpt : eqptList) {
 					if(vd_no.equals(eqpt.getEqptvdno())) {
@@ -58,7 +59,7 @@ public class PromotionServlet extends HttpServlet {
 						}
 					}
 				}
-			}else if("pc_foodno".equals(item_type)) {
+			}else if("pf_foodno".equals(item_type)) {
 				List<FoodVO> foodList = foodSvc.getAll();
 				for(FoodVO food : foodList) {
 					if(vd_no.equals(food.getFoodvdno())) {
@@ -87,6 +88,8 @@ public class PromotionServlet extends HttpServlet {
 			proVO.setPro_name(pro_name);
 			proVO.setPro_start(Date.valueOf(pro_start));
 			proVO.setPro_end(Date.valueOf(pro_end));
+			proVO.setPro_vdno(vd_no);
+			proVO.setPro_stat(0);
 			String pro_no = proSvc.insert(proVO);
 			System.out.println("Promotion : " + pro_no + " inserted.");
 			// Insert promo_camp
@@ -96,6 +99,7 @@ public class PromotionServlet extends HttpServlet {
 				pcVO.setPc_prono(pro_no);
 				pcVO.setPc_campno(pc_campnoList[i]);
 				pcVO.setPc_price(Integer.parseInt(pc_priceList[i]));
+				pcSvc.insert(pcVO);
 				System.out.println("PromoCamp : " + pc_campnoList[i] + " inserted.");
 			}
 			// Insert promo_eqpt
@@ -105,6 +109,7 @@ public class PromotionServlet extends HttpServlet {
 				peVO.setPe_prono(pro_no);
 				peVO.setPe_eqptno(pe_eqptnoList[i]);
 				peVO.setPe_price(Integer.parseInt(pe_priceList[i]));
+				peSvc.insert(peVO);
 				System.out.println("PromoEqpt : " + pe_eqptnoList[i] + " inserted.");
 			}
 			// Insert promo_food
@@ -114,6 +119,7 @@ public class PromotionServlet extends HttpServlet {
 				pfVO.setPf_prono(pro_no);
 				pfVO.setPf_foodno(pf_foodnoList[i]);
 				pfVO.setPf_price(Integer.parseInt(pf_priceList[i]));
+				pfSvc.insert(pfVO);
 				System.out.println("PromoFood : " + pf_foodnoList[i] + " inserted.");
 			}
 		}

@@ -17,7 +17,7 @@ public class PromotionDAO implements PromotionDAO_interface {
 	Connection con = null;
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
-	private static final String SQL_INSERT = "INSERT INTO PROMOTION(PRO_NO,PRO_NAME,PRO_START,PRO_END,PRO_VDNO,PRO_STAT) VALUES('P' || LPAD(SEQ_VDNO.NEXTVAL, 9, '0'),?,?,?,?,?)";
+	private static final String SQL_INSERT = "INSERT INTO PROMOTION(PRO_NO,PRO_NAME,PRO_START,PRO_END,PRO_VDNO,PRO_STAT) VALUES('P' || LPAD(SEQ_PRONO.NEXTVAL, 9, '0'),?,?,?,?,?)";
 	private static final String SQL_UPDATE = "UPDATE PROMOTION SET PRO_NAME=?, PRO_START=?, PRO_END=?, PRO_VDNO=?, PRO_STAT=? WHERE PRO_NO=?";
 	private static final String SQL_QUERYNO = "SELECT * FROM PROMOTION WHERE PRO_NO=?";
 	private static final String SQL_QUERYALL = "SELECT * FROM PROMOTION";
@@ -43,6 +43,7 @@ public class PromotionDAO implements PromotionDAO_interface {
 			rs = pstmt.getGeneratedKeys();
 			if(rs.next()) {
 				pro_no = rs.getString(1);
+				System.out.println("In pstmt.getGeneratedKeys() : " + pro_no);
 			}else {
 				System.out.println("There's no generated pro_no.");
 			}
@@ -74,6 +75,7 @@ public class PromotionDAO implements PromotionDAO_interface {
 				}
 			}
 		}
+		System.out.println("tail of the insert DAO method : " + pro_no);
 		return pro_no;
 	}
 
@@ -308,8 +310,8 @@ public class PromotionDAO implements PromotionDAO_interface {
 	}
 
 	public static void main(String[] args) {
-		String pro_no = "P000000008";
-		String pro_name = "JavaDAO蝚砌�瘜Ｗ���";
+		String pro_no = "P000000001";
+		String pro_name = "JavaDAO第一波促銷";
 		long start = new java.util.Date().getTime();
 		java.sql.Date pro_start = new java.sql.Date(start);
 		long end = new java.util.Date().getTime() + (10 * 24 * 60 * 60 * 1000);
@@ -318,8 +320,8 @@ public class PromotionDAO implements PromotionDAO_interface {
 		int pro_stat = 0;
 		PromotionVO proVO = new PromotionVO(pro_no, pro_name, pro_start, pro_end, pro_vdno, pro_stat);
 		PromotionDAO proDAO = new PromotionDAO();
-//		// Test Promotion Insert DAO
-//		proDAO.insert(proVO);
+		// Test Promotion Insert DAO
+		proDAO.insert(proVO);
 //		// Test Promotion Update DAO
 //		proDAO.update(proVO);
 //		// Test Promotion Query By PRO_NO
@@ -329,17 +331,17 @@ public class PromotionDAO implements PromotionDAO_interface {
 //		System.out.printf("%s PRO_END is : %s%n", pro_no, testQueryNo.getPro_end(), pro_no);
 //		System.out.printf("%s PRO_VDNO is : %s%n", pro_no, testQueryNo.getPro_vdno(), pro_no);
 //		System.out.printf("%s PRO_STAT is : %d%n", pro_no, testQueryNo.getPro_stat(), pro_no);
-		// Test Promotion Query All
-		List<PromotionVO> proVOList = proDAO.queryAll();
-		for (PromotionVO proVOi : proVOList) {
-			System.out.println("===============================");
-			System.out.println("PRO_NO : " + proVOi.getPro_no());
-			System.out.println("PRO_NAME : " + proVOi.getPro_name());
-			System.out.println("PRO_START : " + proVOi.getPro_start());
-			System.out.println("PRO_END : " + proVOi.getPro_end());
-			System.out.println("PRO_VDNO : " + proVOi.getPro_vdno());
-			System.out.println("PRO_STAT : " + proVOi.getPro_stat());
-		}
+//		// Test Promotion Query All
+//		List<PromotionVO> proVOList = proDAO.queryAll();
+//		for (PromotionVO proVOi : proVOList) {
+//			System.out.println("===============================");
+//			System.out.println("PRO_NO : " + proVOi.getPro_no());
+//			System.out.println("PRO_NAME : " + proVOi.getPro_name());
+//			System.out.println("PRO_START : " + proVOi.getPro_start());
+//			System.out.println("PRO_END : " + proVOi.getPro_end());
+//			System.out.println("PRO_VDNO : " + proVOi.getPro_vdno());
+//			System.out.println("PRO_STAT : " + proVOi.getPro_stat());
+//		}
 //		// Test Promotion Delete DAO
 //		proDAO.delete(proVO);
 //		// Test Promotion List Delete DAO
