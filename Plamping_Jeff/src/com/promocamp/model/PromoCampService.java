@@ -21,7 +21,7 @@ public class PromoCampService {
 		pcDAO.update(pcVO);
 	}
 
-	public List<PromoCampVO> getByPe_prono(String pc_prono) {
+	public List<PromoCampVO> getByPc_prono(String pc_prono) {
 		List<PromoCampVO> pcVOList = pcDAO.queryByPro_no(pc_prono);
 		return pcVOList;
 	}

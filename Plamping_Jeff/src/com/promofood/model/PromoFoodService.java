@@ -21,8 +21,8 @@ public class PromoFoodService {
 		pfDAO.update(pfVO);
 	}
 
-	public List<PromoFoodVO> getByPe_prono(String pe_prono) {
-		List<PromoFoodVO> pfVOList = pfDAO.queryByPro_no(pe_prono);
+	public List<PromoFoodVO> getByPf_prono(String pf_prono) {
+		List<PromoFoodVO> pfVOList = pfDAO.queryByPro_no(pf_prono);
 		return pfVOList;
 	}
 

@@ -78,6 +78,15 @@
         input[type='submit']{
         	display: none;
         }
+        div.campItem{
+        	display: none;
+        }
+        div.eqptItem{
+        	display: none;
+        }
+        div.foodItem{
+        	display: none;
+        }
     </style>
 </head>
 <html>
@@ -198,7 +207,7 @@
 	document.querySelector("div.info input[name='vd_no']").value = vd_no;
 	// get pro_no from promoSelect page.
 	var currentURL = new URL(window.location.href);
-	var vd_no = currentURL.searchParams.get("vd_no");
+	var pro_no = currentURL.searchParams.get("pro_no");
     // show price edit field when select item.
     var select = document.querySelectorAll("select");
     select.forEach(function(selecti){
@@ -309,7 +318,23 @@
             console.log("promoDetail data request complete.");
             if(this.status == 200){
                 console.log("request network OK.");
-                selectDOM.nextElementSibling.firstElementChild.value = xhr.responseText;
+                var detailJson = JSON.parse(xhr.responseText);
+                // Get promo_camp data & set to html
+                var pcList = detailJson.pcList;
+                var campItem = document.querySelector("div.campItem");
+                for(let i = 0; i < pcList.length; i++){
+                	if(i == 0){
+                		campItem.children[0].style.display = "none";
+                		campItem.children[1].style.display = "inline";
+                		campItem.children[2].firstElementChild.innerText = pcList[i]
+                	}else{
+                		
+                	}
+                }
+                // Get promo_eqpt data & set to html
+                var peList = detailJson.peList;
+                // Get promo_food data & set to html
+                var pfList = detailJson.pfList;
             }else{
                 console.log("request network Failed. " + this.status);
             }

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.camp.model.*;
 import com.equipment.model.*;
 import com.food.model.*;
+import com.google.gson.*;
 import com.promotion.model.*;
 import com.promocamp.model.*;
 import com.promoeqpt.model.*;
@@ -127,7 +128,38 @@ public class PromotionServlet extends HttpServlet {
 		}
 		// promoDetail ajax call to show promotion details data.
 		if("ajax_getDetail".equals(action)) {
-			
+			String pro_no = req.getParameter("pro_no");
+			// Set promo_camp item to json array.
+			CampService campSvc = new CampService();
+			PromoCampService pcSvc = new PromoCampService();
+			List<PromoCampVO> pcList = pcSvc.getByPc_prono(pro_no);
+			JsonArray pcJarr = new JsonArray();
+			for(PromoCampVO pcVO : pcList) {
+				JsonObject jobj = new JsonObject();
+				jobj = JsonParser.parseString(new Gson().toJson(pcVO)).getAsJsonObject();
+				jobj.addProperty("camp_name", campSvc.getOneCamp(pcVO.getPc_campno()).getCampname());
+				pcJarr.add(jobj);
+			}
+			// Set promo_eqpt item to json array.
+			PromoEqptService peSvc = new PromoEqptService();
+			List<PromoEqptVO> peList = peSvc.getByPe_prono(pro_no);
+			JsonArray peJarr = new JsonArray();
+			for(PromoEqptVO peVO : peList) {
+				peJarr.add(new Gson().toJson(peVO));
+			}
+			// Set promo_food item to json array.
+			PromoFoodService pfSvc = new PromoFoodService();
+			List<PromoFoodVO> pfList = pfSvc.getByPf_prono(pro_no);
+			JsonArray pfJarr = new JsonArray();
+			for(PromoFoodVO pfVO : pfList) {
+				pfJarr.add(new Gson().toJson(pfVO));
+			}
+			// Set all 3 json array to a json object
+			JsonObject json = new JsonObject();
+			json.add("pcList", pcJarr);
+			json.add("peList", peJarr);
+			json.add("pfList", pfJarr);
+			out.print(json);
 		}
 		
 
