@@ -197,7 +197,6 @@
         selecti.onchange = function(){
         	itemShowPrice(this, vd_no, this.name, this.value);
         }
-        
     });
     // show new item when click add btn.
     var addBtn = document.querySelectorAll("button:last-child");

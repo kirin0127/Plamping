@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -70,7 +71,7 @@ public class PromotionServlet extends HttpServlet {
 				}
 			}
 		}
-		// Other action
+		// promoCreate form data process
 		if("create".equals(action)) {
 			// Get parameters from promoCreate.jsp post form data
 			String pro_name = req.getParameter("pro_name");
@@ -122,6 +123,11 @@ public class PromotionServlet extends HttpServlet {
 				pfSvc.insert(pfVO);
 				System.out.println("PromoFood : " + pf_foodnoList[i] + " inserted.");
 			}
+			res.sendRedirect(req.getContextPath() + "/promoSelect.jsp?vd_no=" + vd_no);
+		}
+		// promoDetail ajax call to show promotion details data.
+		if("ajax_getDetail".equals(action)) {
+			
 		}
 		
 
