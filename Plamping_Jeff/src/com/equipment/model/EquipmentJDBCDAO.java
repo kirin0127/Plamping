@@ -11,7 +11,7 @@ public class EquipmentJDBCDAO implements EquipmentDAO_interface {
 
 	private static final String INSERT_STMT = "INSERT INTO EQUIPMENT (EQPT_NO, EQPT_VDNO, EQPT_NAME, EQPT_QTY, EQPT_PRICE, EQPT_STAT, EQPT_PIC) VALUES ('E' || LPAD(SEQ_EQPTNO.NEXTVAL, 9, '0'), ?, ?, ?, ?, ?, ?)";
 	private static final String GET_ALL_STMT = "SELECT EQPT_NO, EQPT_VDNO, EQPT_NAME, EQPT_QTY, EQPT_PRICE, EQPT_STAT, EQPT_PIC FROM EQUIPMENT";
-	private static final String GET_ONE_STMT = "SELECT EQPT_NO, EQPT_VDNO, EQPT_NAME, EQPT_QTY, EQPT_PRICE, EQPT_STAT, EQPT_PIC FROM EQUIPMENT WHERE EQPTD_NO = ?";
+	private static final String GET_ONE_STMT = "SELECT EQPT_NO, EQPT_VDNO, EQPT_NAME, EQPT_QTY, EQPT_PRICE, EQPT_STAT, EQPT_PIC FROM EQUIPMENT WHERE EQPT_NO = ?";
 	private static final String DELETE_EQUIPMENT = "DELETE FROM EQUIPMENT WHERE EQPT_NO = ?";	
 	private static final String UPDATE = "UPDATE EQUIPMENT SET EQPT_VDNO=?, EQPT_NAME=?, EQPT_QTY=?, FOOD_PRICE=?, EQPT_STAT=?, EQPT_PIC=? WHERE EQPT_NO = ?";
 	
@@ -158,13 +158,13 @@ public class EquipmentJDBCDAO implements EquipmentDAO_interface {
 			
 			while (rs.next()) {
 				equipmentVO = new EquipmentVO();
-				equipmentVO.setEqptno(rs.getString("eqptno"));
-				equipmentVO.setEqptvdno(rs.getString("eqptvdno"));
-				equipmentVO.setEqptname(rs.getString("eqptname"));
-				equipmentVO.setEqptqty(rs.getInt("eqptqty"));
-				equipmentVO.setEqptprice(rs.getInt("eqptprice"));
-				equipmentVO.setEqptstat(rs.getInt("eqptstat"));			
-				equipmentVO.setEqptpic(rs.getBytes("eqptpic"));
+				equipmentVO.setEqptno(rs.getString("eqpt_no"));
+				equipmentVO.setEqptvdno(rs.getString("eqpt_vdno"));
+				equipmentVO.setEqptname(rs.getString("eqpt_name"));
+				equipmentVO.setEqptqty(rs.getInt("eqpt_qty"));
+				equipmentVO.setEqptprice(rs.getInt("eqpt_price"));
+				equipmentVO.setEqptstat(rs.getInt("eqpt_stat"));			
+				equipmentVO.setEqptpic(rs.getBytes("eqpt_pic"));
 			}
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Couldn't load database driver. " + e.getMessage());			

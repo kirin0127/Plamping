@@ -29,6 +29,7 @@ public class PromotionServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
+		res.setContentType("text/html; charset=UTF-8");
 		PrintWriter out = res.getWriter();
 		String action = req.getParameter("action");
 		String vd_no = req.getParameter("vd_no");
@@ -135,24 +136,35 @@ public class PromotionServlet extends HttpServlet {
 			List<PromoCampVO> pcList = pcSvc.getByPc_prono(pro_no);
 			JsonArray pcJarr = new JsonArray();
 			for(PromoCampVO pcVO : pcList) {
-				JsonObject jobj = new JsonObject();
-				jobj = JsonParser.parseString(new Gson().toJson(pcVO)).getAsJsonObject();
-				jobj.addProperty("camp_name", campSvc.getOneCamp(pcVO.getPc_campno()).getCampname());
+				JsonObject jobj = JsonParser.parseString(new Gson().toJson(pcVO)).getAsJsonObject();
+				CampVO campVO = campSvc.getOneCamp(pcVO.getPc_campno());
+				jobj.addProperty("camp_name", campVO.getCampname());
+				jobj.addProperty("camp_price", campVO.getCampprice());
 				pcJarr.add(jobj);
 			}
 			// Set promo_eqpt item to json array.
+			EquipmentService eqptSvc = new EquipmentService();
 			PromoEqptService peSvc = new PromoEqptService();
 			List<PromoEqptVO> peList = peSvc.getByPe_prono(pro_no);
 			JsonArray peJarr = new JsonArray();
 			for(PromoEqptVO peVO : peList) {
-				peJarr.add(new Gson().toJson(peVO));
+				JsonObject jobj = JsonParser.parseString(new Gson().toJson(peVO)).getAsJsonObject();
+				EquipmentVO eqptVO = eqptSvc.getOneEquipment(peVO.getPe_eqptno());
+				jobj.addProperty("eqpt_name", eqptVO.getEqptname());
+				jobj.addProperty("eqpt_price", eqptVO.getEqptprice());
+				peJarr.add(jobj);
 			}
 			// Set promo_food item to json array.
+			FoodService foodSvc = new FoodService();
 			PromoFoodService pfSvc = new PromoFoodService();
 			List<PromoFoodVO> pfList = pfSvc.getByPf_prono(pro_no);
 			JsonArray pfJarr = new JsonArray();
 			for(PromoFoodVO pfVO : pfList) {
-				pfJarr.add(new Gson().toJson(pfVO));
+				JsonObject jobj = JsonParser.parseString(new Gson().toJson(pfVO)).getAsJsonObject();
+				FoodVO foodVO = foodSvc.getOneFood(pfVO.getPf_foodno());
+				jobj.addProperty("food_name", foodVO.getFoodname());
+				jobj.addProperty("food_price", foodVO.getFoodprice());
+				pfJarr.add(jobj);
 			}
 			// Set all 3 json array to a json object
 			JsonObject json = new JsonObject();

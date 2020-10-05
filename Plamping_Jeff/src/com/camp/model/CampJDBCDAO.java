@@ -160,14 +160,14 @@ public class CampJDBCDAO implements CampDAO_interface {
 			
 			while (rs.next()) {
 				campVO = new CampVO();
-				campVO.setCampno(rs.getString("campno"));
-				campVO.setCampvdno(rs.getString("campvdno"));
-				campVO.setCampname(rs.getString("campname"));
-				campVO.setCampctno(rs.getString("campctno"));
-				campVO.setCampqty(rs.getInt("campqty"));
-				campVO.setCampprice(rs.getInt("campprice"));
-				campVO.setCampstat(rs.getInt("campstat"));			
-				campVO.setCamppic(rs.getBytes("camppic"));
+				campVO.setCampno(rs.getString("camp_no"));
+				campVO.setCampvdno(rs.getString("camp_vdno"));
+				campVO.setCampname(rs.getString("camp_name"));
+				campVO.setCampctno(rs.getString("camp_ctno"));
+				campVO.setCampqty(rs.getInt("camp_qty"));
+				campVO.setCampprice(rs.getInt("camp_price"));
+				campVO.setCampstat(rs.getInt("camp_stat"));			
+				campVO.setCamppic(rs.getBytes("camp_pic"));
 			}
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Couldn't load database driver. " + e.getMessage());

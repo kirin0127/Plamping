@@ -319,22 +319,59 @@
             if(this.status == 200){
                 console.log("request network OK.");
                 var detailJson = JSON.parse(xhr.responseText);
+                console.log(detailJson);
                 // Get promo_camp data & set to html
                 var pcList = detailJson.pcList;
                 var campItem = document.querySelector("div.campItem");
                 for(let i = 0; i < pcList.length; i++){
-                	if(i == 0){
-                		campItem.children[0].style.display = "none";
-                		campItem.children[1].style.display = "inline";
-                		campItem.children[2].firstElementChild.innerText = pcList[i]
-                	}else{
-                		
+                	let campItemi = campItem.cloneNode(true);
+                	campItemi.style.display = "block";
+                	if(i != 0){
+                		campItemi.children[2].firstElementChild.removeAttribute("selected");
                 	}
+                	campItemi.children[2].firstElementChild.innerText = pcList[i].camp_name;
+                	campItemi.children[2].firstElementChild.value = pcList[i].pc_campno;
+                	campItemi.children[3].firstElementChild.value = pcList[i].camp_price;
+                	campItemi.children[3].lastElementChild.value = pcList[i].pc_price;
+                	console.log(campItemi);
+                	document.querySelector("div.camp").append(campItemi);
+                	console.log(pcList[i].pc_prono + " " + pcList[i].pc_campno + "insert complete.");
                 }
+                
                 // Get promo_eqpt data & set to html
                 var peList = detailJson.peList;
+                var eqptItem = document.querySelector("div.eqptItem");
+                for(let i = 0; i < peList.length; i++){
+                	let eqptItemi = eqptItem.cloneNode(true);
+                	eqptItemi.style.display = "block";
+                	if(i != 0){
+                		eqptItemi.children[2].firstElementChild.removeAttribute("selected");
+                	}
+                	eqptItemi.children[2].firstElementChild.innerText = peList[i].eqpt_name;
+                	eqptItemi.children[2].firstElementChild.value = peList[i].pe_eqptno;
+                	eqptItemi.children[3].firstElementChild.value = peList[i].eqpt_price;
+                	eqptItemi.children[3].lastElementChild.value = peList[i].pe_price;
+                	console.log(eqptItemi);
+                	document.querySelector("div.eqpt").append(eqptItemi);
+                	console.log(peList[i].pe_prono + " " + peList[i].pe_eqptno + "insert complete.");
+                }
                 // Get promo_food data & set to html
                 var pfList = detailJson.pfList;
+                var foodItem = document.querySelector("div.foodItem");
+                for(let i = 0; i < pfList.length; i++){
+                	let foodItemi = foodItem.cloneNode(true);
+                	foodItemi.style.display = "block";
+                	if(i != 0){
+                		foodItemi.children[2].firstElementChild.removeAttribute("selected");
+                	}
+                	foodItemi.children[2].firstElementChild.innerText = pfList[i].food_name;
+                	foodItemi.children[2].firstElementChild.value = pfList[i].pf_foodno;
+                	foodItemi.children[3].firstElementChild.value = pfList[i].food_price;
+                	foodItemi.children[3].lastElementChild.value = pfList[i].pf_price;
+                	console.log(foodItemi);
+                	document.querySelector("div.food").append(foodItemi);
+                	console.log(pfList[i].pf_prono + " " + pfList[i].pf_foodno + "insert complete.");
+                }
             }else{
                 console.log("request network Failed. " + this.status);
             }

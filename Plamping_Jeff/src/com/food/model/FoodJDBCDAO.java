@@ -158,13 +158,13 @@ public class FoodJDBCDAO implements FoodDAO_interface {
 			
 			while (rs.next()) {
 				foodVO = new FoodVO();
-				foodVO.setFoodno(rs.getString("foodno"));
-				foodVO.setFoodvdno(rs.getString("foodvdno"));
-				foodVO.setFoodname(rs.getString("foodname"));
-				foodVO.setFoodprice(rs.getInt("foodprice"));
-				foodVO.setFoodintro(rs.getString("foodintro"));
-				foodVO.setFoodstat(rs.getInt("foodstat"));			
-				foodVO.setFoodpic(rs.getBytes("foodpic"));
+				foodVO.setFoodno(rs.getString("food_no"));
+				foodVO.setFoodvdno(rs.getString("food_vdno"));
+				foodVO.setFoodname(rs.getString("food_name"));
+				foodVO.setFoodprice(rs.getInt("food_price"));
+				foodVO.setFoodintro(rs.getString("food_intro"));
+				foodVO.setFoodstat(rs.getInt("food_stat"));			
+				foodVO.setFoodpic(rs.getBytes("food_pic"));
 			}
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Couldn't load database driver. " + e.getMessage());	
