@@ -108,10 +108,13 @@
             <input type="hidden" name="action" value="edit">
             <div class="info">
                 <span>促銷專案</span>
-                促銷專案名稱：<input type="text" name="pro_name" value="(範例)春節第一波促銷專案" disabled>
-                促銷開始日期：<input type="date" name="pro_start" value="2020-01-01" disabled>
-                促銷結束日期：<input type="date" name="pro_end" value="2020-01-31" disabled>
+		促銷專案名稱：<input type="text" name="pro_name" value="(範例)春節第一波促銷專案" disabled>
+		促銷開始日期：<input type="date" name="pro_start" value="2020-01-01" disabled>
+		促銷結束日期：<input type="date" name="pro_end" value="2020-01-31" disabled>
+		<br>
+		啟用：<input type="checkbox" name="pro_stat" value=1 disabled>              
                 <input type="hidden" name="vd_no" value="">
+                <input type="hidden" name="pro_no" value="">
             </div>
             <div class="camp">
                 <span>促銷營位</span>
@@ -219,6 +222,9 @@
 	// get pro_no from promoSelect page.
 	var currentURL = new URL(window.location.href);
 	var pro_no = currentURL.searchParams.get("pro_no");
+	console.log("URL pro_no: " + pro_no);
+	document.querySelector("div.info input[name='pro_no']").value = pro_no;
+	console.log("form pro_no: " + document.querySelector("div.info input[name='pro_no']").value);
 	
 	// Ajax get promotion detail data.
     var formData = new FormData();
@@ -241,6 +247,9 @@
                 document.querySelector("input[name='pro_name']").value = promoInfo.pro_name;
                 document.querySelector("input[name='pro_start']").value = promoInfo.pro_start;
                 document.querySelector("input[name='pro_end']").value = promoInfo.pro_end;
+                if(promoInfo.pro_stat == 1){
+                	document.querySelector("input[name='pro_stat']").checked = true;
+                }
                 // Get promo_camp data & set to html
                 var pcList = detailJson.pcList;
                 var campItem = document.querySelector("div.campItem");
@@ -268,7 +277,6 @@
                         }
                     };
                 	document.querySelector("div.camp  button").before(campItemi);
-                	console.log(pcList[i].pc_prono + " " + pcList[i].pc_campno + "insert complete.");
                 }
                 campItem.remove();
                 
@@ -299,7 +307,6 @@
                         }
                     };
                 	document.querySelector("div.eqpt button").before(eqptItemi);
-                	console.log(peList[i].pe_prono + " " + peList[i].pe_eqptno + "insert complete.");
                 }
                 eqptItem.remove();
                 
@@ -330,7 +337,6 @@
                         }
                     };
                 	document.querySelector("div.food  button").before(foodItemi);
-                	console.log(pfList[i].pf_prono + " " + pfList[i].pf_foodno + "insert complete.");
                 }
                 foodItem.remove();
                 
@@ -352,6 +358,7 @@
     	document.querySelector("input[name='pro_name']").removeAttribute("disabled"); // promotion name
     	document.querySelector("input[name='pro_start']").removeAttribute("disabled"); // promotion start date
     	document.querySelector("input[name='pro_end']").removeAttribute("disabled"); // promotion end date
+    	document.querySelector("input[name='pro_stat']").removeAttribute("disabled"); // promotion status
     	// camp items
     	document.querySelectorAll("select[name='pc_campno']").forEach(function(campSelecti, index){ 
     		campSelecti.removeAttribute("disabled");

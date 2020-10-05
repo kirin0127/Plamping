@@ -127,6 +127,7 @@ public class PromotionDAO implements PromotionDAO_interface {
 	@Override
 	public PromotionVO queryByNo(String PRO_NO) {
 		PromotionVO proVO = new PromotionVO();
+		proVO.setPro_no(PRO_NO);
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			con = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -311,7 +312,8 @@ public class PromotionDAO implements PromotionDAO_interface {
 
 	public static void main(String[] args) {
 		String pro_no = "P000000001";
-		String pro_name = "JavaDAO第一波促銷";
+//		String pro_name = "JavaDAO第一波促銷";
+		String pro_name = "MVC第一波促銷專案";
 		long start = new java.util.Date().getTime();
 		java.sql.Date pro_start = new java.sql.Date(start);
 		long end = new java.util.Date().getTime() + (10 * 24 * 60 * 60 * 1000);
@@ -320,10 +322,10 @@ public class PromotionDAO implements PromotionDAO_interface {
 		int pro_stat = 0;
 		PromotionVO proVO = new PromotionVO(pro_no, pro_name, pro_start, pro_end, pro_vdno, pro_stat);
 		PromotionDAO proDAO = new PromotionDAO();
-		// Test Promotion Insert DAO
-		proDAO.insert(proVO);
-//		// Test Promotion Update DAO
-//		proDAO.update(proVO);
+//		// Test Promotion Insert DAO
+//		proDAO.insert(proVO);
+		// Test Promotion Update DAO
+		proDAO.update(proVO);
 //		// Test Promotion Query By PRO_NO
 //		PromotionVO testQueryNo = proDAO.queryByNo(pro_no);
 //		System.out.printf("%s PRO_NAME is : %s%n", pro_no, testQueryNo.getPro_name());

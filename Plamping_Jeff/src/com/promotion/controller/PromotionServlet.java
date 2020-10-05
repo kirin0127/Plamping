@@ -137,6 +137,7 @@ public class PromotionServlet extends HttpServlet {
 			proJobj.addProperty("pro_name", proVO.getPro_name());
 			proJobj.addProperty("pro_start", proVO.getPro_start().toString());
 			proJobj.addProperty("pro_end", proVO.getPro_end().toString());
+			proJobj.addProperty("pro_stat", proVO.getPro_stat());
 			// Set promo_camp item to json array.
 			CampService campSvc = new CampService();
 			PromoCampService pcSvc = new PromoCampService();
@@ -182,7 +183,163 @@ public class PromotionServlet extends HttpServlet {
 			out.print(json);
 		}
 		
-
+		// promoDetail form data process
+		if("edit".equals(action)) {
+			// Get parameters from promoDetail.jsp post form data
+			String pro_no = req.getParameter("pro_no");
+			String pro_name = req.getParameter("pro_name");
+			String pro_start = req.getParameter("pro_start");
+			String pro_end = req.getParameter("pro_end");
+			String pro_stat = req.getParameter("pro_stat");
+			String[] pc_campnoList = req.getParameterValues("pc_campno");
+			String[] pc_priceList = req.getParameterValues("pc_price");
+			String[] pe_eqptnoList = req.getParameterValues("pe_eqptno");
+			String[] pe_priceList = req.getParameterValues("pe_price");
+			String[] pf_foodnoList = req.getParameterValues("pf_foodno");
+			String[] pf_priceList = req.getParameterValues("pf_price");
+			// promotion update
+			PromotionService proSvc = new PromotionService();
+			PromotionVO proVO = proSvc.getOnePro(pro_no);
+			System.out.println("proVO check pro_no: " + proVO.getPro_no());
+			System.out.println("proVO check pro_name: " + proVO.getPro_name());
+			System.out.println("proVO check pro_start: " + proVO.getPro_start());
+			System.out.println("proVO check pro_end: " + proVO.getPro_end());
+			System.out.println("proVO check pro_vdno: " + proVO.getPro_vdno());
+			System.out.println("proVO check pro_stat: " + proVO.getPro_stat());
+			proVO.setPro_name(pro_name);
+			proVO.setPro_start(Date.valueOf(pro_start));
+			proVO.setPro_end(Date.valueOf(pro_end));
+			if(pro_stat == null) {
+				proVO.setPro_stat(0);
+			}else {
+				proVO.setPro_stat(Integer.parseInt(pro_stat));
+			}
+			System.out.println("===================================");
+			System.out.println("proVO check pro_no: " + proVO.getPro_no());
+			System.out.println("proVO check pro_name: " + proVO.getPro_name());
+			System.out.println("proVO check pro_start: " + proVO.getPro_start());
+			System.out.println("proVO check pro_end: " + proVO.getPro_end());
+			System.out.println("proVO check pro_vdno: " + proVO.getPro_vdno());
+			System.out.println("proVO check pro_stat: " + proVO.getPro_stat());
+			proSvc.update(proVO);
+			System.out.println("Promotion : " + pro_no + " updated.");
+			
+			// promo_camp update, insert, delete
+			PromoCampService pcSvc = new PromoCampService();
+			List<PromoCampVO> pcVOList_DB = pcSvc.getByPc_prono(pro_no);
+			int[] updatedPcArr = new int[pcVOList_DB.size()]; //default int array value will be 0.
+			for(int i = 0; i < pc_campnoList.length; i++) {
+				String pc_campno = pc_campnoList[i];
+				int updateFlag = 0; // check if the item is existing in previous promotion set or not.
+				for(int j = 0; j < pcVOList_DB.size(); j++) {
+					String pc_campno_DB = pcVOList_DB.get(j).getPc_campno();
+					// Update promo_camp
+					if(pc_campno.equals(pc_campno_DB)) {
+						PromoCampVO pcVO = pcVOList_DB.get(j);
+						pcVO.setPc_price(Integer.parseInt(pc_priceList[i]));
+						pcSvc.update(pcVO);
+						System.out.println("PromoCamp : " + pc_campnoList[i] + " updated.");
+						updatedPcArr[j] = 1;
+						updateFlag = 1;
+					}
+				}
+				// Insert promo_camp
+				if(updateFlag == 0) {
+					PromoCampVO pcVO = new PromoCampVO();
+					pcVO.setPc_prono(pro_no);
+					pcVO.setPc_campno(pc_campnoList[i]);
+					pcVO.setPc_price(Integer.parseInt(pc_priceList[i]));
+					pcSvc.insert(pcVO);
+					System.out.println("PromoCamp : " + pc_campnoList[i] + " inserted.");
+				}
+			}
+			// Delete promo_camp
+			for(int i = 0; i < updatedPcArr.length; i++) {
+				if(updatedPcArr[i] == 0) {
+					PromoCampVO pcVO = pcVOList_DB.get(i);
+					pcSvc.delete(pcVO);
+					System.out.println("PromoCamp : " + pcVO.getPc_campno() + " deleted.");
+				}
+			}
+			
+			// promo_eqpt update, insert, delete
+			PromoEqptService peSvc = new PromoEqptService();
+			List<PromoEqptVO> peVOList_DB = peSvc.getByPe_prono(pro_no);
+			int[] updatedPeArr = new int[peVOList_DB.size()]; //default int array value will be 0.
+			for(int i = 0; i < pe_eqptnoList.length; i++) {
+				String pe_eqptno = pe_eqptnoList[i];
+				int updateFlag = 0; // check if the item is existing in previous promotion set or not.
+				for(int j = 0; j < peVOList_DB.size(); j++) {
+					String pe_eqptno_DB = peVOList_DB.get(j).getPe_eqptno();
+					// Update promo_eqpt
+					if(pe_eqptno.equals(pe_eqptno_DB)) {
+						PromoEqptVO peVO = peVOList_DB.get(j);
+						peVO.setPe_price(Integer.parseInt(pe_priceList[i]));
+						peSvc.update(peVO);
+						System.out.println("PromoEqpt : " + pe_eqptnoList[i] + " updated.");
+						updatedPeArr[j] = 1;
+						updateFlag = 1;
+					}
+				}
+				// Insert promo_eqpt
+				if(updateFlag == 0) {
+					PromoEqptVO peVO = new PromoEqptVO();
+					peVO.setPe_prono(pro_no);
+					peVO.setPe_eqptno(pe_eqptnoList[i]);
+					peVO.setPe_price(Integer.parseInt(pe_priceList[i]));
+					peSvc.insert(peVO);
+					System.out.println("PromoEqpt : " + pe_eqptnoList[i] + " inserted.");	
+				}
+			}
+			// Delete promo_eqpt
+			for(int i = 0; i < updatedPeArr.length; i++) {
+				if(updatedPeArr[i] == 0) {
+					PromoEqptVO peVO = peVOList_DB.get(i);
+					peSvc.delete(peVO);
+					System.out.println("PromoEqpt : " + peVO.getPe_eqptno() + " deleted.");
+				}
+			}
+			
+			
+			// promo_food update, insert, delete
+			PromoFoodService pfSvc = new PromoFoodService();
+			List<PromoFoodVO> pfVOList_DB = pfSvc.getByPf_prono(pro_no);
+			int[] updatedPfArr = new int[pfVOList_DB.size()]; //default int array value will be 0.
+			for(int i = 0; i < pf_foodnoList.length; i++) {
+				String pf_foodno = pf_foodnoList[i];
+				int updateFlag = 0; // check if the item is existing in previous promotion set or not.
+				for(int j = 0; j < pfVOList_DB.size(); j++) {
+					String pf_foodno_DB = pfVOList_DB.get(j).getPf_foodno();
+					// Update promo_food
+					if(pf_foodno.equals(pf_foodno_DB)) {
+						PromoFoodVO pfVO = pfVOList_DB.get(j);
+						pfVO.setPf_price(Integer.parseInt(pf_priceList[i]));
+						pfSvc.update(pfVO);
+						System.out.println("PromoFood : " + pf_foodnoList[i] + " updated.");
+						updatedPfArr[j] = 1;
+						updateFlag = 1;
+					}
+				}
+				if(updateFlag == 0) {
+					// Insert promo_food
+					PromoFoodVO pfVO = new PromoFoodVO();
+					pfVO.setPf_prono(pro_no);
+					pfVO.setPf_foodno(pf_foodnoList[i]);
+					pfVO.setPf_price(Integer.parseInt(pf_priceList[i]));
+					pfSvc.insert(pfVO);
+					System.out.println("PromoFood : " + pf_foodnoList[i] + " inserted.");	
+				}
+			}
+			// Delete promo_food
+			for(int i = 0; i < updatedPfArr.length; i++) {
+				if(updatedPfArr[i] == 0) {
+					PromoFoodVO pfVO = pfVOList_DB.get(i);
+					pfSvc.delete(pfVO);
+					System.out.println("PromoFood : " + pfVO.getPf_foodno() + " deleted.");
+				}
+			}
+			res.sendRedirect(req.getContextPath() + "/promoSelect.jsp?vd_no=" + vd_no);
+		}
 	}
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
