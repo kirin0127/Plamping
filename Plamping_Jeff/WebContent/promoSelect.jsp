@@ -68,8 +68,7 @@
                     <c:forEach var="proVO" items="${proSvc.allPro}" varStatus="proVOi">
                     	<tr>
 	                        <td>${proVOi.index + 1}</td>
-	                        <%--<td><a href=${"promoDetail.jsp?pro_no="}${proVO.pro_no}${"&vd_no="}${proVO.pro_vdno}>${proVO.pro_name}</a></td>--%>
-	                        <td><a href=${"promoDetail_html.html?pro_no="}${proVO.pro_no}${"&vd_no="}${proVO.pro_vdno}>${proVO.pro_name}</a></td>
+	                        <td><a href=${"promoDetail.jsp?pro_no="}${proVO.pro_no}${"&vd_no="}${proVO.pro_vdno}>${proVO.pro_name}</a></td>
 	                        <td>${proVO.pro_start}</td>
 	                        <td>${proVO.pro_end}</td>
 	                        <td>

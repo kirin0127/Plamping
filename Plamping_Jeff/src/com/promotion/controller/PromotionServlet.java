@@ -130,6 +130,13 @@ public class PromotionServlet extends HttpServlet {
 		// promoDetail ajax call to show promotion details data.
 		if("ajax_getDetail".equals(action)) {
 			String pro_no = req.getParameter("pro_no");
+			// Set promotion info to json array.
+			PromotionService proSvc = new PromotionService();
+			PromotionVO proVO = proSvc.getOnePro(pro_no);
+			JsonObject proJobj = new JsonObject();
+			proJobj.addProperty("pro_name", proVO.getPro_name());
+			proJobj.addProperty("pro_start", proVO.getPro_start().toString());
+			proJobj.addProperty("pro_end", proVO.getPro_end().toString());
 			// Set promo_camp item to json array.
 			CampService campSvc = new CampService();
 			PromoCampService pcSvc = new PromoCampService();
@@ -168,6 +175,7 @@ public class PromotionServlet extends HttpServlet {
 			}
 			// Set all 3 json array to a json object
 			JsonObject json = new JsonObject();
+			json.add("promotion", proJobj);
 			json.add("pcList", pcJarr);
 			json.add("peList", peJarr);
 			json.add("pfList", pfJarr);

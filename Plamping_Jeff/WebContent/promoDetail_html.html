@@ -205,16 +205,176 @@
 	var currentURL = new URL(window.location.href);
 	var vd_no = currentURL.searchParams.get("vd_no");
 	document.querySelector("div.info input[name='vd_no']").value = vd_no;
+	
 	// get pro_no from promoSelect page.
 	var currentURL = new URL(window.location.href);
 	var pro_no = currentURL.searchParams.get("pro_no");
-    // show price edit field when select item.
-    var select = document.querySelectorAll("select");
-    select.forEach(function(selecti){
-        selecti.onchange = function(){
-        	itemShowPrice(this, vd_no, this.name, this.value);
+	
+	// Ajax get promotion detail data.
+    var formData = new FormData();
+    formData.append("action", "ajax_getDetail");
+    formData.append("vd_no", vd_no);
+    formData.append("pro_no", pro_no);
+    var xhr = new XMLHttpRequest();
+	var url = "PromotionServlet";
+    xhr.open("POST", url);
+    xhr.send(formData);
+    xhr.onreadystatechange = function(){
+        if(this.readyState == 4){
+            console.log("promoDetail data request complete.");
+            if(this.status == 200){
+                console.log("request network OK.");
+                var detailJson = JSON.parse(xhr.responseText);
+                console.log(detailJson);
+                // Get promotion data & set to html
+                var promoInfo = detailJson.promotion;
+                document.querySelector("input[name='pro_name']").value = promoInfo.pro_name;
+                document.querySelector("input[name='pro_start']").value = promoInfo.pro_start;
+                document.querySelector("input[name='pro_end']").value = promoInfo.pro_end;
+                // Get promo_camp data & set to html
+                var pcList = detailJson.pcList;
+                var campItem = document.querySelector("div.campItem");
+                for(let i = 0; i < pcList.length; i++){
+                	let campItemi = campItem.cloneNode(true);
+                	campItemi.style.display = "block";
+                	if(i != 0){
+                		campItemi.children[2].firstElementChild.removeAttribute("selected");
+                	}
+                	campItemi.children[2].firstElementChild.innerText = pcList[i].camp_name;
+                	campItemi.children[2].firstElementChild.value = pcList[i].pc_campno;
+                	campItemi.children[3].firstElementChild.value = pcList[i].camp_price;
+                	campItemi.children[3].lastElementChild.value = pcList[i].pc_price;
+                	// register select onchange & deleteIcon onclick behavior.
+                    for(let itemChild of campItemi.children){
+                        if(itemChild.tagName == "SELECT"){
+                            itemChild.onchange = function(){
+                            	itemShowPrice(this, vd_no, this.name, this.value);
+                            }	
+                        }
+                        if(itemChild.getAttribute("class") == "deleteIcon"){
+                            itemChild.onclick = function(){
+                            	campItemi.remove();
+                            }
+                        }
+                    };
+                	document.querySelector("div.camp  button").before(campItemi);
+                	console.log(pcList[i].pc_prono + " " + pcList[i].pc_campno + "insert complete.");
+                }
+                campItem.remove();
+                
+                // Get promo_eqpt data & set to html
+                var peList = detailJson.peList;
+                var eqptItem = document.querySelector("div.eqptItem");
+                for(let i = 0; i < peList.length; i++){
+                	let eqptItemi = eqptItem.cloneNode(true);
+                	eqptItemi.style.display = "block";
+                	if(i != 0){
+                		eqptItemi.children[2].firstElementChild.removeAttribute("selected");
+                	}
+                	eqptItemi.children[2].firstElementChild.innerText = peList[i].eqpt_name;
+                	eqptItemi.children[2].firstElementChild.value = peList[i].pe_eqptno;
+                	eqptItemi.children[3].firstElementChild.value = peList[i].eqpt_price;
+                	eqptItemi.children[3].lastElementChild.value = peList[i].pe_price;
+                	// register select onchange & deleteIcon onclick behavior.
+                    for(let itemChild of eqptItemi.children){
+                        if(itemChild.tagName == "SELECT"){
+                            itemChild.onchange = function(){
+                            	itemShowPrice(this, vd_no, this.name, this.value);
+                            }	
+                        }
+                        if(itemChild.getAttribute("class") == "deleteIcon"){
+                            itemChild.onclick = function(){
+                            	eqptItemi.remove();
+                            }
+                        }
+                    };
+                	document.querySelector("div.eqpt button").before(eqptItemi);
+                	console.log(peList[i].pe_prono + " " + peList[i].pe_eqptno + "insert complete.");
+                }
+                eqptItem.remove();
+                
+                // Get promo_food data & set to html
+                var pfList = detailJson.pfList;
+                var foodItem = document.querySelector("div.foodItem");
+                for(let i = 0; i < pfList.length; i++){
+                	let foodItemi = foodItem.cloneNode(true);
+                	foodItemi.style.display = "block";
+                	if(i != 0){
+                		foodItemi.children[2].firstElementChild.removeAttribute("selected");
+                	}
+                	foodItemi.children[2].firstElementChild.innerText = pfList[i].food_name;
+                	foodItemi.children[2].firstElementChild.value = pfList[i].pf_foodno;
+                	foodItemi.children[3].firstElementChild.value = pfList[i].food_price;
+                	foodItemi.children[3].lastElementChild.value = pfList[i].pf_price;
+                	// register select onchange & deleteIcon onclick behavior.
+                    for(let itemChild of foodItemi.children){
+                        if(itemChild.tagName == "SELECT"){
+                            itemChild.onchange = function(){
+                            	itemShowPrice(this, vd_no, this.name, this.value);
+                            }	
+                        }
+                        if(itemChild.getAttribute("class") == "deleteIcon"){
+                            itemChild.onclick = function(){
+                            	foodItemi.remove();
+                            }
+                        }
+                    };
+                	document.querySelector("div.food  button").before(foodItemi);
+                	console.log(pfList[i].pf_prono + " " + pfList[i].pf_foodno + "insert complete.");
+                }
+                foodItem.remove();
+                
+            }else{
+                console.log("request network Failed. " + this.status);
+            }
         }
-    });
+    }
+    
+ 	// click editBtn to let user edit fields.
+    var editBtn = document.getElementById("editBtn");
+    var submitBtn = document.querySelector("input[type='submit']");
+    editBtn.onclick = function(){
+    	// vanish the edit button when user editting.
+    	editBtn.style.display = 'none';
+    	// show the submit button when user editting.
+    	submitBtn.style.display = 'block';
+    	// remove disabled attribute to all edited field.
+    	document.querySelector("input[name='pro_name']").removeAttribute("disabled"); // promotion name
+    	document.querySelector("input[name='pro_start']").removeAttribute("disabled"); // promotion start date
+    	document.querySelector("input[name='pro_end']").removeAttribute("disabled"); // promotion end date
+    	// camp items
+    	document.querySelectorAll("select[name='pc_campno']").forEach(function(campSelecti, index){ 
+    		campSelecti.removeAttribute("disabled");
+    		campSelecti.nextElementSibling.lastElementChild.removeAttribute("disabled");
+    		if(index != 0){
+    			campSelecti.previousElementSibling.previousElementSibling.style.display = "none";
+    			campSelecti.previousElementSibling.style.display = "inline";
+    		}
+    	});
+    	// eqpt items
+    	document.querySelectorAll("select[name='pe_eqptno']").forEach(function(eqptSelecti, index){ 
+    		eqptSelecti.removeAttribute("disabled");
+    		eqptSelecti.nextElementSibling.lastElementChild.removeAttribute("disabled");
+    		if(index != 0){
+    			eqptSelecti.previousElementSibling.previousElementSibling.style.display = "none";
+    			eqptSelecti.previousElementSibling.style.display = "inline";
+    		}
+    	});
+    	// food items
+    	document.querySelectorAll("select[name='pf_foodno']").forEach(function(foodSelecti, index){ 
+    		foodSelecti.removeAttribute("disabled");
+    		foodSelecti.nextElementSibling.lastElementChild.removeAttribute("disabled");
+    		if(index != 0){
+    			foodSelecti.previousElementSibling.previousElementSibling.style.display = "none";
+    			foodSelecti.previousElementSibling.style.display = "inline";
+    		}
+    	});
+    	// addBtn in all items form block.
+    	document.querySelectorAll("button.addBtn").forEach(function(addBtni){
+    		addBtni.style.display = "block";
+    	});
+    }
+    
     // show new item when click add btn.
     var addBtn = document.querySelectorAll("button:last-child");
     addBtn.forEach(function(addBtni){
@@ -243,7 +403,10 @@
             };
         }
     });
-    // onchange callback function of select element.
+    
+
+    
+    // select onchange callback function to show price field with origin price.
     function itemShowPrice(selectDOM, vd_no, item_type, item_no){
         if(selectDOM.value == ""){
         	selectDOM.nextElementSibling.style.display = "none";
@@ -252,7 +415,7 @@
             selectDOM.nextElementSibling.style.display = "inline";
         }
     }
-    // Ajax update selected item original price.
+    // Ajax get item origin price.
     function ajaxGetItemPrice(selectDOM, vd_no, item_type, item_no){
         var formData = new FormData();
         formData.append("action", "ajax_getPrice");
@@ -265,9 +428,7 @@
         xhr.send(formData);
         xhr.onreadystatechange = function(){
             if(this.readyState == 4){
-                console.log("request complete.");
                 if(this.status == 200){
-                    console.log("request network OK.");
                     selectDOM.nextElementSibling.firstElementChild.value = xhr.responseText;
                     console.log(vd_no);
                     console.log(item_type);
@@ -276,104 +437,6 @@
                 }else{
                     console.log("request network Failed. " + this.status);
                 }
-            }
-        }
-    }
-    // click editBtn to let user edit fields.
-    var editBtn = document.getElementById("editBtn");
-    var submitBtn = document.querySelector("input[type='submit']");
-    editBtn.onclick = function(){
-    	editBtn.style.display = 'none';
-    	submitBtn.style.display = 'block';
-    	document.querySelector("input[name='pro_name']").removeAttribute("disabled");
-    	document.querySelector("input[name='pro_start']").removeAttribute("disabled");
-    	document.querySelector("input[name='pro_end']").removeAttribute("disabled");
-    	document.querySelectorAll("select[name='pc_campno']").forEach(function(campSelecti){
-    		campSelecti.removeAttribute("disabled");
-    	});
-    	document.querySelector("input[name='pc_price']").removeAttribute("disabled");
-    	document.querySelectorAll("select[name='pe_eqptno']").forEach(function(eqptSelecti){
-    		eqptSelecti.removeAttribute("disabled");
-    	});
-    	document.querySelector("input[name='pe_price']").removeAttribute("disabled");
-    	document.querySelectorAll("select[name='pf_foodno']").forEach(function(foodSelecti){
-    		foodSelecti.removeAttribute("disabled");
-    	});
-    	document.querySelector("input[name='pf_price']").removeAttribute("disabled");
-    	document.querySelectorAll("button.addBtn").forEach(function(addBtni){
-    		addBtni.style.display = "block";
-    	});
-    }
-    // Ajax update promotion detail field data.
-    var formData = new FormData();
-    formData.append("action", "ajax_getDetail");
-    formData.append("vd_no", vd_no);
-    formData.append("pro_no", pro_no);
-    var xhr = new XMLHttpRequest();
-	var url = "PromotionServlet";
-    xhr.open("POST", url);
-    xhr.send(formData);
-    xhr.onreadystatechange = function(){
-        if(this.readyState == 4){
-            console.log("promoDetail data request complete.");
-            if(this.status == 200){
-                console.log("request network OK.");
-                var detailJson = JSON.parse(xhr.responseText);
-                console.log(detailJson);
-                // Get promo_camp data & set to html
-                var pcList = detailJson.pcList;
-                var campItem = document.querySelector("div.campItem");
-                for(let i = 0; i < pcList.length; i++){
-                	let campItemi = campItem.cloneNode(true);
-                	campItemi.style.display = "block";
-                	if(i != 0){
-                		campItemi.children[2].firstElementChild.removeAttribute("selected");
-                	}
-                	campItemi.children[2].firstElementChild.innerText = pcList[i].camp_name;
-                	campItemi.children[2].firstElementChild.value = pcList[i].pc_campno;
-                	campItemi.children[3].firstElementChild.value = pcList[i].camp_price;
-                	campItemi.children[3].lastElementChild.value = pcList[i].pc_price;
-                	console.log(campItemi);
-                	document.querySelector("div.camp").append(campItemi);
-                	console.log(pcList[i].pc_prono + " " + pcList[i].pc_campno + "insert complete.");
-                }
-                
-                // Get promo_eqpt data & set to html
-                var peList = detailJson.peList;
-                var eqptItem = document.querySelector("div.eqptItem");
-                for(let i = 0; i < peList.length; i++){
-                	let eqptItemi = eqptItem.cloneNode(true);
-                	eqptItemi.style.display = "block";
-                	if(i != 0){
-                		eqptItemi.children[2].firstElementChild.removeAttribute("selected");
-                	}
-                	eqptItemi.children[2].firstElementChild.innerText = peList[i].eqpt_name;
-                	eqptItemi.children[2].firstElementChild.value = peList[i].pe_eqptno;
-                	eqptItemi.children[3].firstElementChild.value = peList[i].eqpt_price;
-                	eqptItemi.children[3].lastElementChild.value = peList[i].pe_price;
-                	console.log(eqptItemi);
-                	document.querySelector("div.eqpt").append(eqptItemi);
-                	console.log(peList[i].pe_prono + " " + peList[i].pe_eqptno + "insert complete.");
-                }
-                // Get promo_food data & set to html
-                var pfList = detailJson.pfList;
-                var foodItem = document.querySelector("div.foodItem");
-                for(let i = 0; i < pfList.length; i++){
-                	let foodItemi = foodItem.cloneNode(true);
-                	foodItemi.style.display = "block";
-                	if(i != 0){
-                		foodItemi.children[2].firstElementChild.removeAttribute("selected");
-                	}
-                	foodItemi.children[2].firstElementChild.innerText = pfList[i].food_name;
-                	foodItemi.children[2].firstElementChild.value = pfList[i].pf_foodno;
-                	foodItemi.children[3].firstElementChild.value = pfList[i].food_price;
-                	foodItemi.children[3].lastElementChild.value = pfList[i].pf_price;
-                	console.log(foodItemi);
-                	document.querySelector("div.food").append(foodItemi);
-                	console.log(pfList[i].pf_prono + " " + pfList[i].pf_foodno + "insert complete.");
-                }
-            }else{
-                console.log("request network Failed. " + this.status);
             }
         }
     }
